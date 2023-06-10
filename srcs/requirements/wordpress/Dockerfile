@@ -1,36 +1,24 @@
-FROM php:7.4-fpm
+FROM debian:10.13
 
-# Install necessary packages
 RUN apt-get update && \
-    apt-get install -y \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    libzip-dev \
-    curl \
-    mariadb-client
+    apt-get install -y php-fpm curl
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql && \
-    docker-php-ext-install mysqli && \
-    docker-php-ext-install gd && \
-    docker-php-ext-install opcache
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Download and extract WordPress
-RUN curl -O https://wordpress.org/latest.tar.gz && \
-    tar -xzf latest.tar.gz && \
-    rm -rf latest.tar.gz && \
-    mv wordpress /var/www/html
+COPY php-fpm.conf /etc/php/7.3/fpm/php-fpm.conf
 
-# Set permissions for the WordPress installation
+WORKDIR /var/www/html
+
+RUN curl -o wordpress.tar.gz -SL https://wordpress.org/latest.tar.gz && \
+    tar -xzf wordpress.tar.gz --strip-components=1 && \
+    rm wordpress.tar.gz
+
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
-# Set the working directory
-WORKDIR /var/www/html
+USER www-data
 
-# Expose port 9000 to communicate with Nginx
 EXPOSE 9000
 
-# Start php-fpm
-CMD ["php-fpm"]
+#CMD ["php-fpm", "F"]
