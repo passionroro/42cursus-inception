@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  nginx:
+    image: 42img-nginx
+    ports:
+      - '443:443'
+    volumes:
+      - 
+    environment:
+      -
+    restart: always
+    networks:
+      - 42network
+
+  wordpress:
+    image: 42img-wordpress
+    volumes:
+      - 
+    restart: always
+    networks:
+      - 42network
+
+  mariadb:
+    image: 42img-mariadb
+    volumes:
+      - 
+    environment:
+      -
+    restart: always
+    networks:
+      - 42network
+
+networks:
+  42network:
+  
+volumes:
+  wordpress:
+  mariadb:
