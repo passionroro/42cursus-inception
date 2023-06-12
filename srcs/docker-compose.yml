@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   nginx:
     container_name: 42-container-nginx
@@ -7,10 +9,10 @@ services:
     ports:
       - '443:443'
     volumes:
-      - wordpress-volume:/var/www/html
+      - 42-volume-wordpress:/var/www/wordpress
     restart: always
     networks:
-      - 42network
+      - 42-network
 
   wordpress:
     container_name: 42-container-wordpress
@@ -20,7 +22,7 @@ services:
     env_file:
       - .env
     volumes:
-      - wordpress-volume:/var/www/html
+      - 42-volume-wordpress:/var/www/wordpress
     restart: always
     networks:
       - 42-network
@@ -31,7 +33,7 @@ services:
     build:
       context: requirements/mariadb
     volumes:
-      - mariadb-volume:/var/www/mysql
+      - 42-volume-mariadb:/var/www/mysql
     env_file:
       - .env
     restart: always
