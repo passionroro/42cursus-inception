@@ -1,37 +1,46 @@
 services:
   nginx:
-    image: 42img-nginx
+    container_name: 42-container-nginx
+    image: 42-image-nginx
+    build:
+      context: requirements/nginx
     ports:
       - '443:443'
     volumes:
-      - 
-    environment:
-      -
+      - wordpress-volume:/var/www/html
     restart: always
     networks:
       - 42network
 
   wordpress:
-    image: 42img-wordpress
+    container_name: 42-container-wordpress
+    image: 42-image-wordpress
+    build:
+      context: requirements/wordpress
+    env_file:
+      - .env
     volumes:
-      - 
+      - wordpress-volume:/var/www/html
     restart: always
     networks:
-      - 42network
+      - 42-network
 
   mariadb:
-    image: 42img-mariadb
+    container_name: 42-container-mariadb
+    image: 42-image-mariadb
+    build:
+      context: requirements/mariadb
     volumes:
-      - 
-    environment:
-      -
+      - mariadb-volume:/var/www/mysql
+    env_file:
+      - .env
     restart: always
     networks:
-      - 42network
+      - 42-network
 
 networks:
-  42network:
+  42-network:
   
 volumes:
-  wordpress:
-  mariadb:
+  42-volume-wordpress:
+  42-volume-mariadb:
