@@ -26,5 +26,5 @@ EXPOSE 9000
 
 COPY wp-cli-config.sh /usr/local/bin/
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-#ENTRYPOINT ["/bin/bash","/usr/local/bin/wp-cli-config.sh"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["/bin/bash","/usr/local/bin/wp-cli-config.sh"]
