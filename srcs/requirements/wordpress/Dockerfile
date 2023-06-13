@@ -1,25 +1,30 @@
 FROM debian:10.13
 
+# Installation: see wp-cli documentation
 RUN apt-get update && \
     apt-get install -y php-fpm php-mysql curl
 
-RUN mkdir -p /var/www
-
-RUN curl -o /tmp/wordpress.tar.gz -SL https://wordpress.org/latest.tar.gz && \
-    tar -xzf /tmp/wordpress.tar.gz -C /var/www
-
-COPY wp-config.php /var/www/wordpress/wp-config.php
-#COPY php-fpm.conf /etc/php/7.3/fpm/hp-fpm.conf
-#COPY wordpress.conf /etc/php/7.3/fpm/pool.d/wordpress.conf
+RUN cd /tmp && \
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
+    
+RUN mkdir -p /var/www/wordpress
 
 WORKDIR /var/www/wordpress
 
-RUN chown -R www-data:www-data /var/www/wordpress && \
-    chmod -R 755 /var/www/wordpress
+# Create non-root user for WordPress installation (security)
+RUN groupadd -r wordpress && \
+    useradd -r -g wordpress wordpress && \
+    chown -R wordpress:wordpress /var/www/wordpress && \
+    find /var/www/wordpress -type d -exec chmod 755 {} \; && \
+    find /var/www/wordpress -type f -exec chmod 644 {} \;
 
-USER www-data
+USER wordpress
 
 EXPOSE 9000
 
+COPY wp-cli-config.sh /usr/local/bin/
+
 ENTRYPOINT ["tail", "-f", "/dev/null"]
-#CMD ["php-fpm7", "F"]
+#ENTRYPOINT ["/bin/bash","/usr/local/bin/wp-cli-config.sh"]
