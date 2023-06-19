@@ -11,5 +11,5 @@ list:
 down:
 	$(DOCKER) down
 
-prune:
+prune: down
 	docker system prune -a
