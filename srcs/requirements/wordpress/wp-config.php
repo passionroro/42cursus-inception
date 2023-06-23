@@ -29,7 +29,7 @@ define( 'DB_USER', getenv('MARIADB_USER') );
 define( 'DB_PASSWORD', getenv('MARIADB_PWD') );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', getenv('MARIADB_HOST') );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
