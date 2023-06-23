@@ -5,10 +5,17 @@ RUN apt-get update && \
 
 RUN mkdir -p /var/www/mysql && \
     chown -R mysql:mysql /var/www/mysql && \
-    chmod 777 /var/www/mysql
+    chmod 755 /var/www/mysql
 
-COPY db_create.sql /docker-entrypoint-initdb.d/
+COPY db_create.sql /usr/local/bin
 
-EXPOSE 3306
+RUN chmod +x /usr/local/bin/db_create.sql
 
-CMD ["mysqld_safe"]
+COPY entrypoint.sh /usr/local/bin
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+USER mysql
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/entrypoint.sh"]
