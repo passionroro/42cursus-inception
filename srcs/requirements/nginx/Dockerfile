@@ -10,7 +10,7 @@ RUN openssl req -nodes -x509 \
     -keyout /etc/nginx/ssl/rohoarau.42.fr.key \
     -out /etc/nginx/ssl/rohoarau.42.fr.crt
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d
 
 EXPOSE 443
 

@@ -2,7 +2,7 @@ version: '3'
 
 services:
   nginx:
-    container_name: 42-container-nginx
+    container_name: nginx
     image: 42-image-nginx
     build:
       context: requirements/nginx
@@ -15,7 +15,7 @@ services:
       - 42-network
 
   wordpress:
-    container_name: 42-container-wordpress
+    container_name: wordpress
     image: 42-image-wordpress
     build:
       context: requirements/wordpress
@@ -26,14 +26,16 @@ services:
     restart: always
     networks:
       - 42-network
+    depends_on:
+      - mariadb
 
   mariadb:
-    container_name: 42-container-mariadb
+    container_name: mariadb
     image: 42-image-mariadb
     build:
       context: requirements/mariadb
     volumes:
-      - 42-volume-mariadb:/var/www/mysql
+      - 42-volume-mariadb:/var/lib/mysql
     env_file:
       - .env
     restart: always
