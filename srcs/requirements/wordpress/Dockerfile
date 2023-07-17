@@ -1,35 +1,16 @@
 FROM debian:10.13
  
 RUN apt-get update && \
-    apt-get install -y curl mariadb-server php php-common php-fpm php-mysql 
+    apt-get install -y curl php7.3 php-fpm php-mysql mariadb-client
 
 RUN cd /tmp && \
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp
     
-RUN mkdir -p /var/www/wordpress
+RUN wp core download --path=/var/www/wordpress
 
-RUN mkdir -p /run/php
+COPY ./conf/php.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY ./tools/entrypoint.sh /usr/local/bin/
 
-WORKDIR /var/www/wordpress
-
-#create non-root user for WordPress installation (security)
-#RUN groupadd -r wordpress && \
-#    useradd -r -g wordpress wordpress
-
-#set permissions on /var/www/wordpress directory
-#RUN chown -R wordpress:wordpress /var/www/wordpress && \
-#    chmod 755 /var/www/wordpress
-
-#and on `wp` commands
-#RUN chown -R wordpress:wordpress /usr/local/bin/wp && \
-#    chmod 755 /usr/local/bin/wp
-
-COPY entrypoint.sh /usr/local/bin/
-
-COPY wp-config.php /var/www/wordpress
-
-#USER wordpress
-
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
