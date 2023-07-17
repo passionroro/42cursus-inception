@@ -1,50 +1,55 @@
 version: '3'
 
 services:
-  nginx:
-    container_name: nginx
-    image: 42-image-nginx
-    build:
-      context: requirements/nginx
-    ports:
-      - '443:443'
-    volumes:
-      - 42-volume-wordpress:/var/www/wordpress
-    restart: always
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    build: 
+      context: requirements/mariadb
+      dockerfile: Dockerfile
+    volumes: 
+      - mariadb:/var/lib/mysql
     networks:
       - 42-network
+    env_file: .env
+    restart: always 
+    expose:
+      - "3306"
+
+  nginx: 
+    image: nginx
+    container_name: nginx
+    build: 
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - wordpress:/var/www/wordpress
+    networks:
+      - 42-network
+    ports:
+      - "443:443"
+    restart: always
 
   wordpress:
+    image: wordpress
     container_name: wordpress
-    image: 42-image-wordpress
-    build:
-      context: requirements/wordpress
-    env_file:
-      - .env
+    env_file: .env
     volumes:
-      - 42-volume-wordpress:/var/www/wordpress
-    restart: always
+    - wordpress:/var/www/wordpress
     networks:
       - 42-network
+    build: 
+      context: requirements/wordpress
+      dockerfile: Dockerfile
     depends_on:
       - mariadb
-
-  mariadb:
-    container_name: mariadb
-    image: 42-image-mariadb
-    build:
-      context: requirements/mariadb
-    volumes:
-      - 42-volume-mariadb:/var/lib/mysql
-    env_file:
-      - .env
     restart: always
-    networks:
-      - 42-network
+    expose: 
+      - "9000"
 
 networks:
   42-network:
   
 volumes:
-  42-volume-wordpress:
-  42-volume-mariadb:
+  wordpress:
+  mariadb:
