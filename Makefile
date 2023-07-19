@@ -1,8 +1,18 @@
 DOCKER = sudo docker compose -f ./srcs/docker-compose.yml
+DATA_FOLDER = /home/rohoarau/data
 
-all:
+all: setup
 	clear
 	$(DOCKER) up -d --build
+
+clean:
+	clear
+	$(DOCKER) down
+
+fclean: clean
+	docker system prune -a --volumes
+
+re: fclean all
 
 list:
 	clear
@@ -11,13 +21,8 @@ list:
 	docker network ls
 	docker volume ls
 
-down:
-	clear
-	$(DOCKER) down
+setup:
+	mkdir -p $(DATA_FOLDER)/mariadb
+	mkdir -p $(DATA_FOLDER)/wordpress
 
-clean: down
-	docker system prune -a --volumes
-
-re: fclean all
-
-.PHONY: all list down fclean re
+.PHONY: all clean fclean re list setup

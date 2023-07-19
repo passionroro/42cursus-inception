@@ -1,8 +1,22 @@
 version: '3'
 
 services:
+  nginx:
+    container_name: nginx
+    build: 
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - wordpress:/var/www/wordpress
+    networks:
+      - 42-network
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+    restart: always
+
   mariadb:
-    image: mariadb
     container_name: mariadb
     build: 
       context: requirements/mariadb
@@ -16,31 +30,16 @@ services:
     expose:
       - "3306"
 
-  nginx: 
-    image: nginx
-    container_name: nginx
-    build: 
-      context: requirements/nginx
-      dockerfile: Dockerfile
-    volumes:
-      - wordpress:/var/www/wordpress
-    networks:
-      - 42-network
-    ports:
-      - "443:443"
-    restart: always
-
   wordpress:
-    image: wordpress
     container_name: wordpress
     env_file: .env
     volumes:
-    - wordpress:/var/www/wordpress
-    networks:
-      - 42-network
+      - wordpress:/var/www/wordpress
     build: 
       context: requirements/wordpress
       dockerfile: Dockerfile
+    networks:
+      - 42-network
     depends_on:
       - mariadb
     restart: always
@@ -52,4 +51,12 @@ networks:
   
 volumes:
   wordpress:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/rohoarau/data/wordpress
   mariadb:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/rohoarau/data/mariadb
