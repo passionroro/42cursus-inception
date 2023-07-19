@@ -8,6 +8,6 @@ mysql -e "GRANT ALL PRIVILEGES ON \`${MARIADB_DB}\`.* TO \`${MARIADB_USER}\`@'%'
 mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MARIADB_ROOT_PWD}';"
 mysql -e "FLUSH PRIVILEGES;"
 
-mysqladmin -u root -p$MARIADB_ROOT_PWD shutdown
+mysqladmin -u root -p"$MARIADB_ROOT_PWD" shutdown
 
 exec mysqld_safe
