@@ -54,11 +54,11 @@ networks:
 volumes:
   wordpress:
     driver_opts:
-      type: 'none'
+      type: 'bridge'
       o: 'bind'
       device: '/home/rohoarau/data/wordpress'
   mariadb:
     driver_opts:
-      type: 'none'
+      type: 'bridge'
       o: 'bind'
       device: '/home/rohoarau/data/mariadb'

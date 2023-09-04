@@ -1,10 +1,9 @@
 FROM debian:10.13
 
-RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get update -y && \
+    apt-get upgrade -y
 
-RUN apt-get install -y vim curl php-fpm php7.3
-
-RUN apt-get install -y mariadb-server
+RUN apt-get install -y mariadb-server vim curl php-fpm php7.3
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
