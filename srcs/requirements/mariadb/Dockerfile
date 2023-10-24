@@ -16,5 +16,4 @@ COPY ./tools/mysql_secure.sh /usr/local/bin/mysql_secure.sh
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

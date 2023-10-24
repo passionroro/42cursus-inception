@@ -12,15 +12,21 @@ echo "mariadb: mysql_secure_installation..."
 /bin/bash /usr/local/bin/mysql_secure.sh
 echo "done."
 
-echo -n "mariadb: database setup..."
-mysql -e "CREATE DATABASE IF NOT EXISTS '${MARIADB_DATABASE}';"
-mysql -e "CREATE USER IF NOT EXISTS '${MARIADB_USER}'@'localhost' IDENTIFIED BY '${MARIADB_USER_PWD}';"
-mysql -e "GRANT ALL ON '${MARIADB_DATABASE}'.* TO '${MARIADB_USER}'@'%';"
+echo -n "mariadb: database and user setup..."
+mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+mysql -e "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
+mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
 mysql -e "FLUSH PRIVILEGES;"
 echo "done."
 
-echo "mariadb: restarting..."
+echo "/*-------------*\\"
+mysql -e "SELECT User,Host FROM mysql.user;"
+echo "\\*-------------*/"
+
+echo "mariadb: shutdown..."
 mysqladmin shutdown
 
-echo "MariaDB setup complete !"
+echo "mariadb: starting server (safe)..."
 exec mysqld_safe
+
+echo "|-- MariaDB setup complete ! --|"

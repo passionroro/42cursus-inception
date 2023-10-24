@@ -6,9 +6,9 @@ DB_USER="rohoarau"
 DB_PASSWORD="coucou1234"
 
 #wordpress
-WP_TITLE="inception :)"
+WP_TITLE="Moustache Gracias"
 ADMIN_USER="rohoarau"
-ADMIN_PWD="coucou12345"
+ADMIN_PWD="coucou1234"
 ADMIN_EMAIL="rohoarau@coucou.com"
 USER_LOGIN="sebastien"
 USER_PASS="seb123"
