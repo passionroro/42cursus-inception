@@ -1,4 +1,4 @@
-DOCKER = sudo docker-compose -f ./srcs/docker-compose.yml
+DOCKER = docker-compose -f ./srcs/docker-compose.yml
 DATA_FOLDER = /home/rohoarau/data
 
 all: 

@@ -21,8 +21,13 @@ if ! wp-cli.phar user list --field=user_login --path='/var/www/html' --allow-roo
 	wp-cli.phar user create "$USER_LOGIN" "$USER_EMAIL" --user_pass="$USER_PASS" --allow-root --path='/var/www/html'
 fi
 
-wp-cli.phar post create /tmp/content.txt --post_title="L’impérialisme suisse ou les secrets d’une puissance invisible" --post_status=publish --allow-root --path=/var/www/html --post_author="Sébastien Guex"
+POST_TITLE="L’impérialisme suisse ou les secrets d’une puissance invisible"
+if ! wp-cli.phar post list --allow-root --path='/var/www/html' --field=post_title | grep -q "$POST_TITLE"; then
+	wp-cli.phar post create /tmp/content.txt --post_title="$POST_TITLE" --post_status=publish --allow-root --path=/var/www/html --post_author="Sébastien Guex"
+fi
 
 echo "|-- Wordpress setup complete! --|"
+
+wp-cli.phar user list --path='/var/www/html' --allow-root
 
 /usr/sbin/php-fpm7.3 -F
