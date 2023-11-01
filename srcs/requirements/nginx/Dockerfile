@@ -10,9 +10,11 @@ RUN openssl req -nodes -x509 \
     -keyout /etc/nginx/ssl/rohoarau.42.fr.key \
     -out /etc/nginx/ssl/rohoarau.42.fr.crt
 
-COPY ./conf/nginx.conf /etc/nginx/conf.d
+RUN chmod 755 /var/www/html && \
+    chown -R www-data:www-data /var/www/html
+
+COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
-

@@ -1,22 +1,29 @@
 FROM debian:10.13
- 
-RUN apt-get update && \
-    apt-get install -y curl php7.3 php-fpm php-mysql mariadb-client
 
-RUN cd /tmp && \
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+RUN apt-get update -y && \
+    apt-get upgrade -y
+
+RUN apt-get install -y mariadb-server vim curl php-fpm php7.3 php-mysql
+
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
-    
-RUN mkdir -p /var/www/wordpress
+    chown root:root wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp-cli.phar
 
-RUN wp core download --path=/var/www/wordpress --allow-root
+RUN mkdir -p /var/www/html && \
+    chown -R root:root /var/www/html && \
+    chmod 755 /var/www/html
 
-RUN chown -R root:root /var/www/wordpress
+RUN wp-cli.phar cli update --allow-root
 
+RUN wp-cli.phar core download --path=/var/www/html --allow-root
+
+RUN mkdir /run/php/
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-COPY ./tools/entrypoint.sh /usr/local/bin/
 
-EXPOSE 9000
+COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+COPY ./tools/content.txt /tmp/content.txt
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
